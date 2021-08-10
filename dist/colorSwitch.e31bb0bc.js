@@ -117,7 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"colors.js":[function(require,module,exports) {
+})({"src/colors.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -126,19 +126,89 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _default = ['#FFFFFF', '#2196F3', '#4CAF50', '#FF9800', '#009688', '#795548'];
 exports.default = _default;
+},{}],"src/random.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = randomIntegerFromInterval;
+
+function randomIntegerFromInterval(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+;
+},{}],"src/backgroundStyle.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = changeBackground;
+
+function changeBackground(color) {
+  document.body.style.background = color;
+}
+
+;
+},{}],"src/buttonActive.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.buttonEnable = buttonEnable;
+exports.buttonDisable = buttonDisable;
+
+function buttonEnable(el) {
+  el.disabled = true;
+}
+
+;
+
+function buttonDisable(el) {
+  el.disabled = false;
+}
+
+;
 },{}],"index.js":[function(require,module,exports) {
 "use strict";
 
-var _colors = _interopRequireDefault(require("./colors"));
+var _colors = _interopRequireDefault(require("./src/colors"));
+
+var _random = _interopRequireDefault(require("./src/random"));
+
+var _backgroundStyle = _interopRequireDefault(require("./src/backgroundStyle"));
+
+var _buttonActive = require("./src/buttonActive");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-console.log(_colors.default);
+var buttonStartEl = document.querySelector('[data-action="start"]');
+buttonStartEl.addEventListener('click', callbackButtonStart);
+var buttonStopEl = document.querySelector('[data-action="stop"]');
+buttonStopEl.addEventListener('click', callbackButtonStop);
+var idColorSetInterval = 0;
 
-var randomIntegerFromInterval = function randomIntegerFromInterval(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
-},{"./colors":"colors.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+function callbackButtonStart() {
+  idColorSetInterval = setInterval(function () {
+    var indexColor = (0, _random.default)(_colors.default.length, -1);
+    var color = _colors.default[indexColor];
+    (0, _backgroundStyle.default)(color);
+  }, 1000);
+  (0, _buttonActive.buttonEnable)(buttonStartEl);
+}
+
+;
+
+function callbackButtonStop() {
+  clearInterval(idColorSetInterval);
+  (0, _buttonActive.buttonDisable)(buttonStartEl);
+}
+
+;
+},{"./src/colors":"src/colors.js","./src/random":"src/random.js","./src/backgroundStyle":"src/backgroundStyle.js","./src/buttonActive":"src/buttonActive.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
